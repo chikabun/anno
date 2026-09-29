@@ -1,0 +1,8 @@
+static/*
+!static/testing_shared.js
+!static/style.css
+
+frames/
+__pycache__/
+
+.env
