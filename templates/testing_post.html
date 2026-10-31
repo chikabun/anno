@@ -1,0 +1,139 @@
+{% extends "layout4testing.html" %}
+{% block title %}GIF Maker - Testing{% endblock %}
+{% block body %}
+
+<script>
+  jQuery(function () {
+
+    let login = "{{ test_login }}";
+    let password = "{{ test_password }}";
+
+    get_auth_token(login, password);
+
+    jQuery("#submit_button").click(function () {
+
+      let t = jQuery("input[name=t]").val();
+      let login = jQuery("input[name=login]").val();
+      let password = jQuery("input[name=password]").val();
+      let template = jQuery("select[name=template]").val();
+      let ignore_cache = jQuery("input[name=ignore_cache]").prop('checked');
+
+      let d = {
+        t: t,
+        login: login,
+        password: password,
+        template: template,
+        ignore_cache: ignore_cache,
+        token: window.gifMakerAuthToken
+      };
+
+      console.log("Sending request");
+      console.log(d);
+
+      jQuery.ajax({
+        url: '/g',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(d),
+      })
+        .done(function (data) {
+          jQuery('#result_text').html('');
+          jQuery('#result_image').attr('src', '');
+
+          console.log("Receiving response");
+          console.log(data);
+
+          // print JSON response in any case
+          jQuery('#result_text').html('<pre>' + JSON.stringify(data, null, 2) + '</pre>')
+
+          if (!data.error) {
+            jQuery('#result_image').attr('src', data.result);
+
+            // use black color font for a normal response
+            jQuery('#result_text').css('color', 'black');
+          }
+          else {
+            // use red color font for an error response
+            jQuery('#result_text').css('color', 'red');
+          }
+        });
+    });
+  });
+</script>
+
+<h2>Testing POST requests</h2>
+
+<table>
+  <tr>
+    <td>
+      Seed:
+    </td>
+    <td>
+      <input type="text" name="t" value="">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      Login:
+    </td>
+    <td id="gif_maker_login">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      Password:
+    </td>
+    <td id="gif_maker_password">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      Template:
+    </td>
+    <td>
+      {% include "list_of_templates.html" %}
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      Ignore Cache:
+    </td>
+    <td>
+      <input type="checkbox" name="ignore_cache" value="1">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <input type="submit" id="submit_button" value="Generate">
+    </td>
+    <td>
+    </td>
+  </tr>
+</table>
+
+<h2>Result</h2>
+
+<table>
+  <tr>
+    <td>
+      Result Raw:
+    </td>
+    <td id="result_text">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Result GIF:
+    </td>
+    <td>
+      <img src="" id="result_image">
+    </td>
+  </tr>
+</table>
+
+{% endblock %}

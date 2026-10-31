@@ -1,0 +1,75 @@
+{% extends "layout4testing.html" %}
+{% block title %}GIF Maker - Testing{% endblock %}
+{% block body %}
+
+<h2>Testing GET requests</h2>
+
+<script>
+  jQuery(function () {
+
+    let login = "{{ test_login }}";
+    let password = "{{ test_password }}";
+
+    get_auth_token(login, password);
+
+    // window.gifMakerAuthToken should be defined before a button click
+    jQuery("#assign_images_button").click(function () {
+      let url1 = "http://localhost:5555/g?token=__TOKEN__&t=&template=1";
+      let url2 = "http://localhost:5555/g?token=__TOKEN__&t=&template=2";
+      let url3 = "http://localhost:5555/g?token=__TOKEN__&t=&template=200";
+      let url4 = "http://localhost:5555/g?token=__TOKEN__&t=qqq&template=200";
+
+      jQuery('#demo1').attr('src', url1.replace('__TOKEN__', window.gifMakerAuthToken));
+      jQuery('#demo2').attr('src', url2.replace('__TOKEN__', window.gifMakerAuthToken));
+      jQuery('#demo3').attr('src', url3.replace('__TOKEN__', window.gifMakerAuthToken));
+      jQuery('#demo4').attr('src', url4.replace('__TOKEN__', window.gifMakerAuthToken));
+    });
+
+  });
+</script>
+
+<table>
+
+  <tr>
+    <td>
+      Login:
+    </td>
+    <td id="gif_maker_login">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      Password:
+    </td>
+    <td id="gif_maker_password">
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <input type="button" id="assign_images_button" value="Get Images">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <img id="demo1" src="" alt="Waiting...">
+    </td>
+    <td>
+      <img id="demo2" src="" alt="Waiting...">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <img id="demo3" src="" alt="Waiting...">
+    </td>
+    <td>
+      <img id="demo4" src="" alt="Waiting...">
+    </td>
+  </tr>
+
+</table>
+
+{% endblock %}

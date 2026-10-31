@@ -180,7 +180,8 @@ class AnnoDB:
                 (session_id, user_id, self.session_ttl)
             )
             self.connection.commit()
-        except Error:
+        except Error as e:
+            print("!! MySQL error !! " + str(e))
             return None
         finally:
             cursor.close()
@@ -197,7 +198,8 @@ class AnnoDB:
                 (session_id,)
             )
             row = cursor.fetchone()
-        except Error:
+        except Error as e:
+            print("!! MySQL error !! " + str(e))
             return None
         finally:
             cursor.close()
@@ -214,8 +216,8 @@ class AnnoDB:
                 (self.session_ttl, session_id)
             )
             self.connection.commit()
-        except Error:
-            pass
+        except Error as e:
+            print("!! MySQL error !! " + str(e))
         finally:
             cursor.close()
 
@@ -226,8 +228,8 @@ class AnnoDB:
             cursor = self.connection.cursor()
             cursor.execute("DELETE FROM admin_sessions WHERE id = %s", (session_id,))
             self.connection.commit()
-        except Error:
-            pass
+        except Error as e:
+            print("!! MySQL error !! " + str(e))
         finally:
             cursor.close()
 
@@ -239,7 +241,7 @@ class AnnoDB:
             cursor = self.connection.cursor()
             cursor.execute("DELETE FROM admin_sessions WHERE expires_at <= NOW()")
             self.connection.commit()
-        except Error:
-            pass
+        except Error as e:
+            print("!! MySQL error !! " + str(e))
         finally:
             cursor.close()
